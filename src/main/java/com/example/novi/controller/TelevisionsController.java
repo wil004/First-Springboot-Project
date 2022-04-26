@@ -1,74 +1,58 @@
 package com.example.novi.controller;
 
+import com.example.novi.domain.dto.TelevisionDto;
+import com.example.novi.domain.dto.TelevisionInputDto;
 import com.example.novi.controller.exceptions.RecordNotFoundException;
 import com.example.novi.domain.Television;
+import com.example.novi.services.TelevisionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-
+@RequestMapping("/televisions")
 public class TelevisionsController {
-    final Television samsung = new Television("Samsung");
-    final Television philips = new Television("Philips");
-    final Television sony = new Television("Sony");
-    List<Television> allTelevision = List.of(samsung, philips, sony);
+    final List<Television> allTelevisions;
 
-    @GetMapping("/televisions")
-    public ResponseEntity<List<Television>> printTelevision() {
+   private final TelevisionService televisionService;
 
-        return ResponseEntity.ok(allTelevision);
+    @Autowired
+    public TelevisionsController(List<Television> allTelevisions, TelevisionService televisionService) {
+        this.allTelevisions = allTelevisions;
+        this.televisionService = televisionService;
     }
 
-    @GetMapping("/televisions/{id}")
-    public ResponseEntity<Television> getTelevisionById(@PathVariable String id) {
-        for (int i = 0; i < allTelevision.size(); i++) {
-            if (allTelevision.get(i).getTelevision().equalsIgnoreCase(id)) {
-                return ResponseEntity.ok(allTelevision.get(i));
-            }
-        }
-        throw new RecordNotFoundException("Television not found!");
+
+    @GetMapping()
+    public ResponseEntity<List<TelevisionDto>> printAllTelevisions() {
+        return ResponseEntity.ok(televisionService.getAllTelevisions());
     }
 
-    @PostMapping(value = "/television",
+    @GetMapping("/{id}")
+    public ResponseEntity<TelevisionDto> getTelevisionById(@PathVariable Long id) {
+        return ResponseEntity.ok(televisionService.getTelevisionById(id));
+    }
+
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<TelevisionDto> create(@RequestBody TelevisionInputDto televisionInputDto) {
+        final TelevisionDto createdTelevision = televisionService.createTelevision(televisionInputDto);
+        return ResponseEntity.ok(createdTelevision);
+    }
+
+
+
+    @PutMapping(value = "/{id}/{type}",
             consumes = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<Television> create(@RequestBody Television television) {
-        System.out.println("Creating" + television.getTelevision());
-        return ResponseEntity.created(null).build();
+    public ResponseEntity<TelevisionDto> updateTelevision(@PathVariable Long id ,@PathVariable String type, @RequestBody TelevisionInputDto televisionInputDto) {
+        final TelevisionDto televisionDto = televisionService.changeTelevision(id, type, televisionInputDto);
+        return ResponseEntity.ok(televisionDto);
     }
 
-    @PutMapping(value = "/televisions/{id}",
-            consumes = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<Television> updateTelevision(@PathVariable String id, @RequestBody String updateTelevision) {
-        for (int i = 0; i < allTelevision.size(); i++) {
-            if (allTelevision.get(i).getTelevision().equalsIgnoreCase(id)) {
-                allTelevision.get(i).setTelevision(updateTelevision);
-                System.out.println(id + " updated to " + allTelevision.get(i).getTelevision());
-                return ResponseEntity.noContent().build();
-            }
-        }
-        throw new RecordNotFoundException("Object not found");
-    }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Television> deleteTelevision(@PathVariable String id) {
-        int deleteThisObject = -1;
-        for (int i = 0; i < allTelevision.size(); i++) {
-            if (allTelevision.get(i).getTelevision().equalsIgnoreCase(id)) {
-                System.out.println(allTelevision.get(i).getTelevision() + " has been removed from the list!");
-                allTelevision.get(i).setTelevision("DELETED!");
-                deleteThisObject = i;
-            }
-        } if (deleteThisObject >= 0) {
-            allTelevision.remove(deleteThisObject);
-            // Gives an internal server error in postman but still deletes the object!
-            // Send twice to check if object is deleted!.
-            return ResponseEntity.noContent().build();
-        } else {
-            throw new RecordNotFoundException("You can't delete a television that doesn't exist");
+    @DeleteMapping("/{id}")
+    public void deleteTelevision(@PathVariable Long id) {
+            televisionService.deleteTelevision(id);
         }
-        }
-
-
 }

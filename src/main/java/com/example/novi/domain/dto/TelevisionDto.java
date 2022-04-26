@@ -1,55 +1,22 @@
-package com.example.novi.domain;
+package com.example.novi.domain.dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
-@Entity
-public class Television {
-    @Id
-    @GeneratedValue
+public class TelevisionDto {
     private Long id;
-    @Column
     private String brand;
-    @Column
     private String type;
-    @Column
     private String name;
-
-    @Column
     private double price;
-    @Column
     private double availableSize;
-    @Column
     private double reshRate;
-
-    @Column
     private String screenType;
-    @Column
     private String screenQuality;
-    @Column
     private boolean smartTv;
-    @Column
     private boolean wifi;
-    @Column
     private boolean hdr;
-    @Column
     private boolean bluetooth;
-    @Column
     private boolean ambiLight;
-
-    @Column
     private int originalStock;
-    @Column
     private int sold;
-
-
-    public Television() {};
-
-    public Television(String television) {
-        this.brand = television;
-    };
 
     public Long getId() {
         return id;
