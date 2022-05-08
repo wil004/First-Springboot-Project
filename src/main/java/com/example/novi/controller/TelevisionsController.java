@@ -1,9 +1,7 @@
 package com.example.novi.controller;
-
-import com.example.novi.domain.dto.TelevisionDto;
-import com.example.novi.domain.dto.TelevisionInputDto;
-import com.example.novi.controller.exceptions.RecordNotFoundException;
-import com.example.novi.domain.Television;
+import com.example.novi.model.dto.TelevisionDto;
+import com.example.novi.model.dto.TelevisionInputDto;
+import com.example.novi.model.Television;
 import com.example.novi.services.TelevisionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
