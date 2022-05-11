@@ -1,14 +1,6 @@
-package com.example.novi.model;
+package com.example.novi.model.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
-@Entity
-public class CiModule {
-    @Id
-    @GeneratedValue
+public class CiModuleDto {
     private Long id;
 
     private String name;
@@ -16,8 +8,7 @@ public class CiModule {
 
     private double price;
 
-    @ManyToOne
-    private Television television;
+    private Long televisionDtoId;
 
     public Long getId() {
         return id;
@@ -51,11 +42,11 @@ public class CiModule {
         this.price = price;
     }
 
-    public Television getTelevision() {
-        return television;
+    public Long getTelevisionDtoId() {
+        return televisionDtoId;
     }
 
-    public void setTelevision(Television television) {
-        this.television = television;
+    public void setTelevisionDtoId(Long televisionDtoId) {
+        this.televisionDtoId = televisionDtoId;
     }
 }

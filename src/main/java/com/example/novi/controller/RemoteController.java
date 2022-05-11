@@ -1,10 +1,9 @@
 package com.example.novi.controller;
 
-import com.example.novi.model.Remote;
 import com.example.novi.model.dto.CreateRemoteDto;
 import com.example.novi.model.dto.RemoteDto;
-import com.example.novi.model.dto.TelevisionDto;
 import com.example.novi.services.RemoteService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +13,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/remote")
 public class RemoteController {
-    private RemoteService remoteService;
+    private final RemoteService remoteService;
 
+    @Autowired
     public RemoteController(RemoteService remoteService) {
         this.remoteService = remoteService;
     }

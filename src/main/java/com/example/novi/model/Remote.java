@@ -20,8 +20,8 @@ public class Remote {
 
     private int originalStock;
 
-    @OneToOne
-    private Television televisionWithRemote;
+    @OneToOne(mappedBy = "remote")
+    private Television television;
 
     public Long getId() {
         return id;
@@ -79,12 +79,12 @@ public class Remote {
         this.originalStock = originalStock;
     }
 
-    public Television getTelevisionWithRemote() {
-        return televisionWithRemote;
+    public Television getTelevision() {
+        return television;
     }
 
-    public void setTelevisionWithRemote(Television televisionWithRemote) {
-        this.televisionWithRemote = televisionWithRemote;
+    public void setTelevision(Television television) {
+        this.television = television;
     }
 
 }

@@ -40,6 +40,19 @@ public class TelevisionsController {
     }
 
 
+    @PutMapping(value = "{televisionId}/remote/{remoteId}",
+            consumes = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<TelevisionDto> addRemoteToTelevision(@PathVariable Long televisionId ,@PathVariable Long remoteId) {
+        TelevisionDto televisionDto = televisionService.addRemoteToTelevision(televisionId, remoteId);
+        return ResponseEntity.ok(televisionDto);
+    }
+
+    @PutMapping(value = "{televisionId}/CiModule/{ciModuleId}",
+            consumes = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<TelevisionDto> addCiModuleToTelevision(@PathVariable Long televisionId ,@PathVariable Long ciModuleId) {
+        TelevisionDto televisionDto = televisionService.addCiModuleToTelevision(televisionId, ciModuleId);
+        return ResponseEntity.ok(televisionDto);
+    }
 
     @PutMapping(value = "/{id}/{type}",
             consumes = { MediaType.APPLICATION_JSON_VALUE })

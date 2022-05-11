@@ -18,8 +18,6 @@ public class RemoteDto {
 
     private int originalStock;
 
-    private TelevisionDto televisionDto;
-
     public Long getId() {
         return id;
     }
@@ -74,13 +72,5 @@ public class RemoteDto {
 
     public void setOriginalStock(int originalStock) {
         this.originalStock = originalStock;
-    }
-
-    public TelevisionDto getTelevisionDto() {
-        return televisionDto;
-    }
-
-    public void setTelevisionDto(TelevisionDto televisionDto) {
-        this.televisionDto = televisionDto;
     }
 }

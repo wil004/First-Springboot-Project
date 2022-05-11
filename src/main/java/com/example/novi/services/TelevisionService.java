@@ -1,12 +1,17 @@
 package com.example.novi.services;
 
 import com.example.novi.controller.exceptions.RecordNotFoundException;
+import com.example.novi.model.CiModule;
 import com.example.novi.model.Remote;
 import com.example.novi.model.Television;
-import com.example.novi.model.dto.RemoteDto;
+import com.example.novi.model.dto.CiModuleDto;
 import com.example.novi.model.dto.TelevisionDto;
 import com.example.novi.model.dto.TelevisionInputDto;
+import com.example.novi.model.dto.WallBracketDto;
+import com.example.novi.repository.CiModuleRepository;
+import com.example.novi.repository.RemoteRepository;
 import com.example.novi.repository.TelevisionRepository;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +22,19 @@ import java.util.List;
 public class TelevisionService {
 
     private final TelevisionRepository televisionRepository;
+    private final RemoteRepository remoteRepository;
+    private final RemoteService remoteService;
+    private final CiModuleRepository ciModuleRepository;
+    private final CiModuleService ciModuleService;
+
 
     @Autowired
-    public TelevisionService(TelevisionRepository televisionRepository) {
+    public TelevisionService(TelevisionRepository televisionRepository, RemoteRepository remoteRepository, RemoteService remoteService, CiModuleRepository ciModuleRepository, CiModuleService ciModuleService) {
         this.televisionRepository = televisionRepository;
+        this.remoteService = remoteService;
+        this.remoteRepository = remoteRepository;
+        this.ciModuleRepository = ciModuleRepository;
+        this.ciModuleService = ciModuleService;
     }
 
 
@@ -29,9 +43,6 @@ public class TelevisionService {
         List<TelevisionDto> allTelevisionDto = new ArrayList<>();
         for (int i = 0; i < allTelevision.size(); i++) {
             allTelevisionDto.add(transferToTelevisionDto(allTelevision.get(i)));
-            if (allTelevision.get(i).getRemote() != null) {
-                allTelevisionDto.get(i).setRemoteDto(transferToRemoteDto(allTelevision.get(i).getRemote()));
-            }
         }
         return allTelevisionDto;
     }
@@ -109,6 +120,7 @@ public class TelevisionService {
 
     public TelevisionDto transferToTelevisionDto(Television television) {
         TelevisionDto televisionDto = new TelevisionDto();
+        televisionDto.setId(television.getId());
         televisionDto.setName(television.getName());
         televisionDto.setPrice(television.getPrice());
         televisionDto.setBrand(television.getBrand());
@@ -122,18 +134,60 @@ public class TelevisionService {
         televisionDto.setWifi(television.isWifi());
         televisionDto.setBluetooth(television.isBluetooth());
         televisionDto.setAmbiLight(television.isAmbiLight());
+        if (television.getRemote() != null) {
+            televisionDto.setRemoteDto(remoteService.transferToRemoteDto(television.getRemote()));
+        }
+        if(television.getCiModule() != null) {
+            List<CiModuleDto> ciModuleDtoList = new ArrayList<>();
+            for(int i = 0; i < television.getCiModule().size(); i++) {
+                ciModuleDtoList.add((ciModuleService.transferToCiModuleDto(television.getCiModule().get(i))));
+            }
+            televisionDto.setCiModule(ciModuleDtoList);
+        }
         return televisionDto;
     }
 
-    public RemoteDto transferToRemoteDto (Remote remote) {
-        RemoteDto remoteDto = new RemoteDto();
-        remoteDto.setCompatibleWith(remote.getCompatibleWith());
-        remoteDto.setBatteryType(remote.getBatteryType());
-        remoteDto.setName(remote.getName());
-        remoteDto.setBrand(remote.getBrand());
-        remoteDto.setPrice(remote.getPrice());
-        remoteDto.setOriginalStock(remote.getOriginalStock());
-        return remoteDto;
+    public TelevisionDto addRemoteToTelevision(Long televisionId, Long remoteId) {
+        Remote remote = remoteRepository.findById(remoteId).orElseThrow();
+
+        Television television = televisionRepository.findById(televisionId).orElseThrow();
+        if(television.getRemote() == null) {
+            if(remote.getTelevision() == null) {
+                television.setRemote(remote);
+                remote.setTelevision(television);
+            } else {
+                throw new RecordNotFoundException("Remote is already connected to a television!");
+            }
+        }
+        else {
+            throw new RecordNotFoundException("Television is already connected to a remote!");
+        }
+
+        remoteRepository.save(remote);
+        final Television savedTelevision = televisionRepository.save(television);
+
+        return transferToTelevisionDto(savedTelevision);
     }
+
+    public TelevisionDto addCiModuleToTelevision(Long televisionId, Long ciModuleId) {
+        CiModule ciModule = ciModuleRepository.findById(ciModuleId).orElseThrow();
+
+        Television television = televisionRepository.findById(televisionId).orElseThrow();
+
+        if(ciModule.getTelevision() == null) {
+            List<CiModule> ciModuleList = new ArrayList<>(television.getCiModule());
+            ciModuleList.add(ciModule);
+            television.setCiModule(ciModuleList);
+            ciModule.setTelevision(television);
+        } else {
+            throw new RecordNotFoundException("CiModule is already connected to another television!");
+        }
+
+        ciModuleRepository.save(ciModule);
+        final Television savedTelevision = televisionRepository.save(television);
+
+        return transferToTelevisionDto(savedTelevision);
+    }
+
 
 }

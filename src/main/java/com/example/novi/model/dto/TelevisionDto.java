@@ -1,6 +1,10 @@
 package com.example.novi.model.dto;
 
+import com.example.novi.model.CiModule;
 import com.example.novi.model.Remote;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.List;
 
 public class TelevisionDto {
     private Long id;
@@ -21,6 +25,10 @@ public class TelevisionDto {
     private int sold;
 
     private RemoteDto remoteDto;
+
+    private List<CiModuleDto> ciModule;
+
+    private List<WallBracketDto> wallBracketDto;
 
     public Long getId() {
         return id;
@@ -154,5 +162,21 @@ public class TelevisionDto {
 
     public void setRemoteDto(RemoteDto remoteDto) {
         this.remoteDto = remoteDto;
+    }
+
+    public List<CiModuleDto> getCiModule() {
+        return ciModule;
+    }
+
+    public void setCiModule(List<CiModuleDto> ciModule) {
+        this.ciModule = ciModule;
+    }
+
+    public List<WallBracketDto> getWallBracketDto() {
+        return wallBracketDto;
+    }
+
+    public void setWallBracketDto(List<WallBracketDto> wallBracketDto) {
+        this.wallBracketDto = wallBracketDto;
     }
 }

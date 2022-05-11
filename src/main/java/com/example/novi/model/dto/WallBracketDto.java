@@ -1,14 +1,9 @@
-package com.example.novi.model;
+package com.example.novi.model.dto;
 
-import javax.persistence.*;
 import java.util.List;
 
-@Entity
-public class WallBracket {
-    @Id
-    @GeneratedValue
+public class WallBracketDto {
     private Long id;
-
     private String size;
     private String name;
 
@@ -16,9 +11,7 @@ public class WallBracket {
 
     private boolean adjustable;
 
-    @ManyToMany
-    private List<Television> televisions;
-
+    private List<TelevisionDto> televisionDto;
 
     public Long getId() {
         return id;
@@ -60,12 +53,11 @@ public class WallBracket {
         this.adjustable = adjustable;
     }
 
-
-    public List<Television> getTelevisions() {
-        return televisions;
+    public List<TelevisionDto> getTelevisionDto() {
+        return televisionDto;
     }
 
-    public void setTelevisions(List<Television> televisions) {
-        this.televisions = televisions;
+    public void setTelevisionDto(List<TelevisionDto> televisionDto) {
+        this.televisionDto = televisionDto;
     }
 }

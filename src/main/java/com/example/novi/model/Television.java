@@ -1,6 +1,7 @@
 package com.example.novi.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Television {
@@ -41,8 +42,14 @@ public class Television {
     @Column
     private int sold;
 
-    @OneToOne(mappedBy = "televisionWithRemote")
+    @OneToOne
     private Remote remote;
+
+    @OneToMany(mappedBy = "television")
+    private List<CiModule> ciModule;
+
+    @ManyToMany
+    private List<WallBracket> wallBrackets;
 
 
     public Television() {};
@@ -183,5 +190,21 @@ public class Television {
 
     public void setRemote(Remote remote) {
         this.remote = remote;
+    }
+
+    public List<CiModule> getCiModule() {
+        return ciModule;
+    }
+
+    public void setCiModule(List<CiModule> ciModule) {
+        this.ciModule = ciModule;
+    }
+
+    public List<WallBracket> getWallBrackets() {
+        return wallBrackets;
+    }
+
+    public void setWallBrackets(List<WallBracket> wallBrackets) {
+        this.wallBrackets = wallBrackets;
     }
 }
