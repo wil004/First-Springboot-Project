@@ -48,6 +48,9 @@ public class Television {
     @OneToMany(mappedBy = "television")
     private List<CiModule> ciModule;
 
+    @OneToMany(mappedBy = "televisionId")
+    private List<TelevisionAndWallBrackets> televisionAndWallBrackets;
+
     @ManyToMany
     private List<WallBracket> wallBrackets;
 
@@ -206,5 +209,13 @@ public class Television {
 
     public void setWallBrackets(List<WallBracket> wallBrackets) {
         this.wallBrackets = wallBrackets;
+    }
+
+    public List<TelevisionAndWallBrackets> getTelevisionAndWallBrackets() {
+        return televisionAndWallBrackets;
+    }
+
+    public void setTelevisionAndWallBrackets(List<TelevisionAndWallBrackets> televisionAndWallBrackets) {
+        this.televisionAndWallBrackets = televisionAndWallBrackets;
     }
 }

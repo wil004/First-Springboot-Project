@@ -16,6 +16,9 @@ public class WallBracket {
 
     private boolean adjustable;
 
+    @OneToMany(mappedBy = "wallBracketId")
+    private List<TelevisionAndWallBrackets> televisionAndWallBrackets;
+
     @ManyToMany
     private List<Television> televisions;
 
@@ -67,5 +70,13 @@ public class WallBracket {
 
     public void setTelevisions(List<Television> televisions) {
         this.televisions = televisions;
+    }
+
+    public List<TelevisionAndWallBrackets> getTelevisionAndWallBrackets() {
+        return televisionAndWallBrackets;
+    }
+
+    public void setTelevisionAndWallBrackets(List<TelevisionAndWallBrackets> televisionAndWallBrackets) {
+        this.televisionAndWallBrackets = televisionAndWallBrackets;
     }
 }

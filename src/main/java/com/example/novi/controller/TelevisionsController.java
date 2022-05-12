@@ -2,6 +2,7 @@ package com.example.novi.controller;
 import com.example.novi.model.dto.TelevisionDto;
 import com.example.novi.model.dto.TelevisionInputDto;
 import com.example.novi.model.Television;
+import com.example.novi.services.TelevisionAndWallBracketsService;
 import com.example.novi.services.TelevisionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -15,17 +16,19 @@ public class TelevisionsController {
     final List<Television> allTelevisions;
 
    private final TelevisionService televisionService;
+    private final TelevisionAndWallBracketsService televisionAndWallBracketsService;
 
     @Autowired
-    public TelevisionsController(List<Television> allTelevisions, TelevisionService televisionService) {
+    public TelevisionsController(List<Television> allTelevisions, TelevisionService televisionService, TelevisionAndWallBracketsService televisionAndWallBracketsService) {
         this.allTelevisions = allTelevisions;
         this.televisionService = televisionService;
+        this.televisionAndWallBracketsService = televisionAndWallBracketsService;
     }
 
 
     @GetMapping()
     public ResponseEntity<List<TelevisionDto>> printAllTelevisions() {
-        return ResponseEntity.ok(televisionService.getAllTelevisions());
+        return ResponseEntity.ok(televisionAndWallBracketsService.allTelevisionsWithWallBrackets());
     }
 
     @GetMapping("/{id}")
@@ -38,7 +41,6 @@ public class TelevisionsController {
         final TelevisionDto createdTelevision = televisionService.createTelevision(televisionInputDto);
         return ResponseEntity.ok(createdTelevision);
     }
-
 
     @PutMapping(value = "{televisionId}/remote/{remoteId}",
             consumes = { MediaType.APPLICATION_JSON_VALUE })
